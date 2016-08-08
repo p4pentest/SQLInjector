@@ -12,7 +12,7 @@ We often miss out testing of various URLs for SQL Injection. We may be specifica
 
 This script helps in automating list of URLs or request files. It has two modes:
 
-  1. When we are manually testing other vulnerabilities in an application using Burp or any other proxy tool, we keep browsing the application and all requests get captured in HTML request history. Once all testing is complete, we can simply copy all the URLs (For BurpSuite, CTRL+A in "HTML History") and paste them in a file. We can then run the script. This will test all the GET requests.
+  1. When we are manually testing other vulnerabilities in an application using Burp or any other proxy tool, we keep browsing the application and all requests get captured in HTML request history. Manually testing all these URLs with all parameters is not feasible. Once all testing is complete, we can simply copy all the URLs (For BurpSuite, CTRL+A in "HTML History") and paste them in a file. We can then run the script. This will test all the GET requests.
   2. While browsing if we see some important requests (GET, POST or other methods) simply copy the request in a file. Keep copying all suspicious requests in separate files and keep all of them in a folder. Now run the script. This will test all other methos including GET, POST, etc.
 
 Instructions to run the script:
