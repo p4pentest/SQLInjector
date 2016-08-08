@@ -1,4 +1,9 @@
 #!/bin/bash
+
+
+# Author = "Abhijit Maity"
+# Last Update Date = "08-Aug-2016"
+
 echo "Enter preferred choice :"
 echo "1. Scan for list of URLs"
 echo "2. Scan for list of request files (recommended for POST methods)"
