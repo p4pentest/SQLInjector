@@ -1,8 +1,7 @@
 #!/bin/bash
 
-
 # Author = "Abhijit Maity"
-# Last Update Date = "08-Aug-2016"
+# Last Update Date = "04-Aug-2016"
 
 echo "Enter preferred choice :"
 echo "1. Scan for list of URLs"
@@ -43,7 +42,7 @@ then
 			echo
 			echo "Checking File / URL: \"$file\" ..."
 			time=`date`
-			echo "$time:          Checking File / URL: \"$file\" ..." >> "$date"/supersql.log
+			echo "$time:          Checking File / URL: \"$file\" ..." >> "$date"/sqlinjector.log
 
 			if [ "$choice" == "1" ]
 			then
@@ -75,11 +74,11 @@ then
 					echo "Payload: $val4"
 
 					time=`date`
-					echo "$time:          Vulnerable Parameter Details:" >> "$date"/supersql.log
-					echo "$time:          Parameter: $val1" >> "$date"/supersql.log
-					echo "$time:          Type: $val2" >> "$date"/supersql.log
-					echo "$time:          Title: $val3" >> "$date"/supersql.log
-					echo "$time:          Payload: $val4" >> "$date"/supersql.log
+					echo "$time:          Vulnerable Parameter Details:" >> "$date"/sqlinjector.log
+					echo "$time:          Parameter: $val1" >> "$date"/sqlinjector.log
+					echo "$time:          Type: $val2" >> "$date"/sqlinjector.log
+					echo "$time:          Title: $val3" >> "$date"/sqlinjector.log
+					echo "$time:          Payload: $val4" >> "$date"/sqlinjector.log
 				done
 
 				cp "$date"/$i.log "$date"/$i/
@@ -91,7 +90,7 @@ then
 			else
 				echo "No Vulnerable Parameters Found !!!"
 				time=`date`
-				echo "$time:          No Vulnerable Parameters Found !!!" >> "$date"/supersql.log
+				echo "$time:          No Vulnerable Parameters Found !!!" >> "$date"/sqlinjector.log
 			fi
 
 			rm -rf "$date"/$i/
@@ -100,14 +99,14 @@ then
 			stat=`expr "$c" - "$i"`
 			echo
 			time=`date`
-			echo "$time:          $stat Files / URLs left..." >> "$date"/supersql.log
+			echo "$time:          $stat Files / URLs left..." >> "$date"/sqlinjector.log
 			echo "$stat Files / URLs left..."
 			echo
 		done
 	else
 		echo
 		time=`date`
-		echo "$time:          Sorry !! No Files / URLs were found !!!" >> "$date"/supersql.log
+		echo "$time:          Sorry !! No Files / URLs were found !!!" >> "$date"/sqlinjector.log
 		echo "Sorry !! No Files / URLs were found !!!"
 		echo
 	fi
