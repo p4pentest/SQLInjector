@@ -21,11 +21,11 @@ Instructions to run the script:
 
 2. Run the below command:
 
-chmod +x supersql
+chmod +x sqlinjector
 
 3. Execute the script:
 
-./supersql
+./sqlinjector
 
 When prompted for choice
 
