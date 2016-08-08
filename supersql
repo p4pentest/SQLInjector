@@ -1,0 +1,118 @@
+#!/bin/bash
+echo "Enter preferred choice :"
+echo "1. Scan for list of URLs"
+echo "2. Scan for list of request files (recommended for POST methods)"
+read choice
+
+if [ "$choice" == "1" -o "$choice" == "2" ]
+then
+	if [ "$choice" == "1" ]
+	then
+		echo "Enter file with list of URLs"
+		read list
+		c=`wc -l $list | cut -d " " -f1`
+	else
+		echo "Enter path with request files. Make sure they are normal '.txt' file or 'cat' readable file !!!"
+		read path
+		c=`ls $path | wc -l`
+	fi
+
+	if [ "$c" != "0" ]
+	then
+		date=`date +%d"-"%m"-"%Y`
+		mkdir -p "$date"
+		mkdir -p "$date"/output_details
+		pwd=`pwd`
+
+		echo "File / URL@Parameter@Type@Title@Payload" > "$date"/output_details/output
+
+		for (( i=1 ; i <= $c ; i++ ))
+		do
+			if [ "$choice" == "1" ]
+			then
+				file=`sed -n ''$i'p' $list`
+			else
+				file=`ls $path | sed -n ''$i'p'`
+			fi
+
+			echo
+			echo "Checking File / URL: \"$file\" ..."
+			time=`date`
+			echo "$time:          Checking File / URL: \"$file\" ..." >> "$date"/supersql.log
+
+			if [ "$choice" == "1" ]
+			then
+				sqlmap -u "$file" -p EIO --dbs --batch --output-dir=$pwd/"$date"/$i  --timeout 1000000 --random-agent --no-cast --text-only --threads 9 --level 3 > "$date"/$i.log
+			else
+				sqlmap -r "$path/$file" -p password --dbs --batch --output-dir=$pwd/"$date"/$i  --timeout 1000000 --random-agent --no-cast --text-only --threads 9 --level 3 > "$date"/$i.log	
+			fi
+
+			found=`cat "$date"/$i.log | grep "sqlmap identified the following injection points" | wc -l`
+			if [ "$found" != "0" ]
+			then
+				paramc=`cat "$date"/$i.log | grep "Parameter:" -n | wc -l`
+				for (( j=1 ; j <= $paramc ; j++ ))
+				do
+					line=`cat "$date"/$i.log | grep "Parameter:" -n | sed -n ''$j'p' | cut -d ":" -f1`
+					val1=`cat "$date"/$i.log | sed -n ''$line'p' | cut -d ":" -f2`
+					line=`expr "$line" + "1"`
+					val2=`cat "$date"/$i.log | sed -n ''$line'p' | cut -d ":" -f2`
+					line=`expr "$line" + "1"`
+					val3=`cat "$date"/$i.log | sed -n ''$line'p' | cut -d ":" -f2`
+					line=`expr "$line" + "1"`
+					val4=`cat "$date"/$i.log | sed -n ''$line'p' | cut -d ":" -f2`
+
+					echo $file@$val1@$val2@$val3@$val4 >> "$date"/output_details/output
+					echo "Vulnerable Parameter Details:"
+					echo "Parameter: $val1"
+					echo "Type: $val2"
+					echo "Title: $val3"
+					echo "Payload: $val4"
+
+					time=`date`
+					echo "$time:          Vulnerable Parameter Details:" >> "$date"/supersql.log
+					echo "$time:          Parameter: $val1" >> "$date"/supersql.log
+					echo "$time:          Type: $val2" >> "$date"/supersql.log
+					echo "$time:          Title: $val3" >> "$date"/supersql.log
+					echo "$time:          Payload: $val4" >> "$date"/supersql.log
+				done
+
+				cp "$date"/$i.log "$date"/$i/
+				if [ "$choice" == "2" ]
+				then
+					cp $path/$file "$date"/$i/
+				fi
+				cp -r "$date"/$i/ output_details/
+			else
+				echo "No Vulnerable Parameters Found !!!"
+				time=`date`
+				echo "$time:          No Vulnerable Parameters Found !!!" >> "$date"/supersql.log
+			fi
+
+			rm -rf "$date"/$i/
+			rm "$date"/$i.log
+
+			stat=`expr "$c" - "$i"`
+			echo
+			time=`date`
+			echo "$time:          $stat Files / URLs left..." >> "$date"/supersql.log
+			echo "$stat Files / URLs left..."
+			echo
+		done
+	else
+		echo
+		time=`date`
+		echo "$time:          Sorry !! No Files / URLs were found !!!" >> "$date"/supersql.log
+		echo "Sorry !! No Files / URLs were found !!!"
+		echo
+	fi
+
+echo
+echo "Scanning Complete!!!"
+pwd=`pwd`
+echo "Please check the folder : '$pwd/$date'"
+echo
+
+else
+	echo "Error - Wrong choice. Please provide correct input !!!"
+fi
